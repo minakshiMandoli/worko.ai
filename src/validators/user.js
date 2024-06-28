@@ -1,15 +1,24 @@
-const Joi = require("joi");
+const joi = require("joi");
 
-const userSchema = Joi.object({
-  email: Joi.string().email().required(),
-  name: Joi.string().required(),
-  age: Joi.number().integer().min(0).required(),
-  city: Joi.string().required(),
-  zipCode: Joi.string()
-    .pattern(/^\d{5}$/)
-    .required(),
-});
-
-module.exports = {
-  validateUser: (user) => userSchema.validate(user),
+const validateUser = async (req, res, next) => {
+  try {
+    const userSchema = joi.object({
+      email: joi.string().email().required(),
+      name: joi.string().required(),
+      age: joi.number().integer().min(0).required(),
+      city: joi.string().required(),
+      zipCode: joi.string().required(),
+    });
+    const { error } = userSchema.validate(req.body);
+    if (error) {
+      return res
+        .status(400)
+        .send({ status: false, message: error.details[0].message });
+    }
+    next();
+  } catch (err) {
+    return res.status(500).send({ status: false, message: err.message });
+  }
 };
+
+module.exports = { validateUser };

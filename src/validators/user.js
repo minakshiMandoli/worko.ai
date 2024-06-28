@@ -1,4 +1,5 @@
 const joi = require("joi");
+const ObjectId = require("mongoose").Types.ObjectId;
 const { errorMessage } = require("../config/options");
 const validateUser = async (req, res, next) => {
   try {
@@ -17,7 +18,9 @@ const validateUser = async (req, res, next) => {
     }
     next();
   } catch (err) {
-    res.status(500).send({ status: false, message: errorMessage.SERVER_ERROR });
+    return res
+      .status(500)
+      .send({ status: false, message: errorMessage.SERVER_ERROR });
   }
 };
 

@@ -13,6 +13,7 @@ app.listen(process.env.PORT || 3000, function () {
 });
 
 const userRouter = require("./routes/user");
-app.use("/", userRouter);
+app.use("/worko/user", userRouter);
+
 
 module.exports = app;

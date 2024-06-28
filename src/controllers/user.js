@@ -7,9 +7,7 @@ const {
 
 exports.createUser = async (req, res) => {
   try {
-    const duplicateUserExist = await UserService.getOneUser({
-      email: req.body.email,
-    });
+    const duplicateUserExist = await UserService.checkDuplicate(req.body);
     if (duplicateUserExist) {
       return res
         .status(400)
@@ -73,6 +71,34 @@ exports.deleteUser = async (req, res) => {
     return res.status(200).send({
       status: true,
       message: successMessage.DELETE_SUCCESS_MESSAGE("User"),
+    });
+  } catch (error) {
+    console.log("err", error);
+    return res.status(500).json({ error: errorMessage.SERVER_ERROR });
+  }
+};
+exports.updateUser = async (req, res) => {
+  try {
+    const duplicateUserExist = await UserService.checkDuplicate(
+      req.body,
+      req.params.id
+    );
+    if (duplicateUserExist) {
+      return res
+        .status(400)
+        .send({ status: false, message: errorMessage.ALREADY_EXIST("Email") });
+    }
+    const user = await UserService.updateUser(req.params.id, req.body);
+    if (!user) {
+      return res
+        .status(400)
+        .send({ status: false, message: errorMessage.DOES_NOT_EXIST("User") });
+    }
+
+    return res.status(200).send({
+      status: true,
+      message: successMessage.UPDATE_SUCCESS_MESSAGE("User"),
+      data: user,
     });
   } catch (error) {
     console.log("err", error);

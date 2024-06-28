@@ -24,15 +24,26 @@ exports.getUserById = async (id) => {
 };
 
 exports.updateUser = async (id, userData) => {
-  const user = await UserDAO.update(id, userData);
+  const user = await UserDAO.updateUser(
+    { _id: id, status: { $ne: defaultStatus.DELETED } },
+    userData
+  );
   return user ? new UserDTO(user) : null;
 };
 
 exports.deleteUser = async (id) => {
-  const user = await UserDAO.softDelete({
+  const user = await UserDAO.deleteUser({
     _id: id,
-    status: defaultStatus.DELETED,
+    status: { $ne: defaultStatus.DELETED },
   });
 
   return user ? new UserDTO(user) : null;
+};
+exports.checkDuplicate = async (body, id) => {
+  try {
+    return await UserDAO.findOne({
+      email: body.email,
+      ...(id && { _id: { $ne: id } }),
+    });
+  } catch (error) {}
 };

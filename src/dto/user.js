@@ -1,12 +1,32 @@
-class UserDTO {
-  constructor(data) {
-    this.id = data._id;
-    this.email = data.email;
-    this.name = data.name;
-    this.age = data.age;
-    this.city = data.city;
-    this.zipCode = data.zipCode;
-  }
-}
-
-module.exports = UserDTO;
+exports.createUpdate = async (data) => {
+  const user = {
+    id: data._id,
+    email: data.email,
+    name: data.name,
+    age: data.age,
+    city: data.city,
+    zipCode: data.zipCode,
+  };
+  return user;
+};
+exports.list = async (data) => {
+  const user = {
+    id: data._id,
+    email: data.email,
+    name: data.name,
+  };
+  console.log("data", user);
+  return user;
+};
+exports.view = async (data) => {
+  const user = {
+    id: data._id,
+    email: data.email,
+    name: data.name,
+    age: data.age,
+    city: data.city,
+    zipCode: data.zipCode,
+    status: data.status,
+  };
+  return user;
+};

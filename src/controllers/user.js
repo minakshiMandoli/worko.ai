@@ -20,6 +20,7 @@ exports.createUser = async (req, res) => {
       data: user,
     });
   } catch (error) {
+    console.log("error", error);
     res.status(500).send({ status: false, message: errorMessage.SERVER_ERROR });
   }
 };
@@ -42,7 +43,7 @@ exports.getUsers = async (req, res) => {
 exports.viewUser = async (req, res) => {
   try {
     const user = await UserService.getOneUser({
-      _id: req.params.is,
+      _id: req.params.id,
       status: { $ne: defaultStatus.DELETED },
     });
     if (!user) {
@@ -56,7 +57,9 @@ exports.viewUser = async (req, res) => {
       data: user,
     });
   } catch (error) {
-    return res.status(500).json({ error: errorMessage.SERVER_ERROR });
+    return res
+      .status(500)
+      .send({ status: false, message: errorMessage.SERVER_ERROR });
   }
 };
 exports.deleteUser = async (req, res) => {
@@ -74,7 +77,9 @@ exports.deleteUser = async (req, res) => {
     });
   } catch (error) {
     console.log("err", error);
-    return res.status(500).json({ error: errorMessage.SERVER_ERROR });
+    return res
+      .status(500)
+      .send({ status: false, message: errorMessage.SERVER_ERROR });
   }
 };
 exports.updateUser = async (req, res) => {
@@ -102,6 +107,8 @@ exports.updateUser = async (req, res) => {
     });
   } catch (error) {
     console.log("err", error);
-    return res.status(500).json({ error: errorMessage.SERVER_ERROR });
+    return res
+      .status(500)
+      .send({ status: false, message: errorMessage.SERVER_ERROR });
   }
 };

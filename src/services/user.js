@@ -3,24 +3,22 @@ const UserDTO = require("../dto/user");
 const { defaultStatus } = require("../config/options");
 exports.createUser = async (userData) => {
   const user = await UserDAO.create(userData);
-  return new UserDTO(user);
+  return UserDTO.createUpdate(user);
 };
 
 exports.getAllUsers = async (query) => {
   const users = await UserDAO.findAll(query);
-  return users.map((user) => new UserDTO(user));
+  const list = Promise.all(users.map(async (user) => UserDTO.list(user)));
+
+  return list;
 };
 exports.getUserById = async (id) => {
   const user = await UserDAO.findById(id);
-  return user ? new UserDTO(user) : null;
+  return user ? UserDTO.view(user) : null;
 };
 exports.getOneUser = async (query) => {
   const user = await UserDAO.findOne(query);
-  return user ? new UserDTO(user) : null;
-};
-exports.getUserById = async (id) => {
-  const user = await UserDAO.findById(id);
-  return user ? new UserDTO(user) : null;
+  return user ? UserDTO.view(user) : null;
 };
 
 exports.updateUser = async (id, userData) => {
@@ -28,7 +26,7 @@ exports.updateUser = async (id, userData) => {
     { _id: id, status: { $ne: defaultStatus.DELETED } },
     userData
   );
-  return user ? new UserDTO(user) : null;
+  return user ? UserDTO.createUpdate(user) : null;
 };
 
 exports.deleteUser = async (id) => {
@@ -37,7 +35,7 @@ exports.deleteUser = async (id) => {
     status: { $ne: defaultStatus.DELETED },
   });
 
-  return user ? new UserDTO(user) : null;
+  return user ? UserDTO.view(user) : null;
 };
 exports.checkDuplicate = async (body, id) => {
   try {

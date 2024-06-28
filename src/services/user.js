@@ -10,3 +10,11 @@ exports.getAllUsers = async () => {
   const users = await UserDAO.findAll();
   return users.map((user) => new UserDTO(user));
 };
+exports.getUserById = async (id) => {
+  const user = await UserDAO.findById(id);
+  return user ? new UserDTO(user) : null;
+};
+exports.getOneUser = async (query) => {
+  const user = await UserDAO.findOne({});
+  return user ? new UserDTO(user) : null;
+};

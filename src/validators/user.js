@@ -1,5 +1,5 @@
 const joi = require("joi");
-
+const { errorMessage } = require("../config/options");
 const validateUser = async (req, res, next) => {
   try {
     const userSchema = joi.object({
@@ -17,7 +17,7 @@ const validateUser = async (req, res, next) => {
     }
     next();
   } catch (err) {
-    return res.status(500).send({ status: false, message: err.message });
+    res.status(500).send({ status: false, message: errorMessage.SERVER_ERROR });
   }
 };
 

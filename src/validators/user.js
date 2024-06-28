@@ -1,6 +1,6 @@
 const joi = require("joi");
 const ObjectId = require("mongoose").Types.ObjectId;
-const { errorMessage } = require("../config/options");
+const { errorMessage, defaultStatus } = require("../config/options");
 const validateUser = async (req, res, next) => {
   try {
     const userSchema = joi.object({
@@ -23,5 +23,26 @@ const validateUser = async (req, res, next) => {
       .send({ status: false, message: errorMessage.SERVER_ERROR });
   }
 };
+const validateUserStatus = async (req, res, next) => {
+  try {
+    const userSchema = joi.object({
+      status: joi
+        .string()
+        .valid(defaultStatus.ACTIVE, defaultStatus.INACTIVE)
+        .required(),
+    });
+    const { error } = userSchema.validate(req.body);
+    if (error) {
+      return res
+        .status(400)
+        .send({ status: false, message: error.details[0].message });
+    }
+    next();
+  } catch (err) {
+    return res
+      .status(500)
+      .send({ status: false, message: errorMessage.SERVER_ERROR });
+  }
+};
 
-module.exports = { validateUser };
+module.exports = { validateUser, validateUserStatus };

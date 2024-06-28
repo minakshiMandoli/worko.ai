@@ -26,7 +26,7 @@ exports.updateUser = async (id, userData) => {
     { _id: id, status: { $ne: defaultStatus.DELETED } },
     userData
   );
-  return user ? UserDTO.createUpdate(user) : null;
+  return user ? UserDTO.view(user) : null;
 };
 
 exports.deleteUser = async (id) => {

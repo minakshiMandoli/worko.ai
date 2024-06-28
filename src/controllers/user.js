@@ -112,3 +112,24 @@ exports.updateUser = async (req, res) => {
       .send({ status: false, message: errorMessage.SERVER_ERROR });
   }
 };
+exports.patchUpdateUser = async (req, res) => {
+  try {
+    const user = await UserService.updateUser(req.params.id, {status:req.body.status});
+    if (!user) {
+      return res
+        .status(400)
+        .send({ status: false, message: errorMessage.DOES_NOT_EXIST("User") });
+    }
+
+    return res.status(200).send({
+      status: true,
+      message: successMessage.UPDATE_SUCCESS_MESSAGE("User"),
+      data: user,
+    });
+  } catch (error) {
+    console.log("err", error);
+    return res
+      .status(500)
+      .send({ status: false, message: errorMessage.SERVER_ERROR });
+  }
+};

@@ -12,8 +12,7 @@ app.listen(process.env.PORT || 3000, function () {
   console.log("Express app running on port " + (process.env.PORT || 3000));
 });
 
-// const indexRouter = require("./routes/index");
-
-// app.use("/", indexRouter);
+const userRouter = require("./routes/user");
+app.use("/", userRouter);
 
 module.exports = app;
